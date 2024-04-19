@@ -163,4 +163,5 @@ print(
     '\uf073 <span color="#BEBEBE">{}</span> '
     '\uf017 <span color="#BEBEBE">{}</span> '
     .format(color_mem(mem), mem, color_uso(cpu_uso), cpu_uso, icon(cpu_temp), color_temp(cpu_temp), cpu_temp,
-            gpu_freq, icon(gpu_temp), color_gpu(gpu_temp), gpu_temp, volumen_color(get_master_volume()), get_master_volume(), currentDate, currentTime))
+            gpu_freq, icon(gpu_temp), color_gpu(gpu_temp), gpu_temp, volumen_color(get_master_volume()),
+            get_master_volume(), currentDate, currentTime))
