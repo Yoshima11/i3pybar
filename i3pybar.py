@@ -1,3 +1,4 @@
+import subprocess
 import time
 import locale
 import psutil
@@ -22,8 +23,32 @@ gpu_temp = int(int(file.read()) / 1000)
 file.close()
 
 file = open(gpu_freq_path)
-gpu_freq = int(int(file.read())/100000)
+gpu_freq = int(int(file.read()) / 100000)
 file.close()
+
+
+def get_master_volume():
+    proc = subprocess.Popen('/usr/bin/amixer sget Master', shell=True, stdout=subprocess.PIPE)
+    amixer_stdout = str(proc.communicate()[0].split()[25].decode())
+    proc.wait()
+    proc = subprocess.Popen('/usr/bin/amixer sget Master', shell=True, stdout=subprocess.PIPE)
+    amixer_enable = str(proc.communicate()[0].split()[26].decode())
+    proc.wait()
+    find_start = amixer_stdout.find('[') + 1
+    find_end = amixer_stdout.find(']', find_start)
+    if amixer_enable == '[on]':
+        return str(amixer_stdout[find_start:find_end])
+    else:
+        return 'off'
+
+
+def volumen_color(volumen):
+    print(volumen)
+    if volumen == 'off':
+        return '#ff8000'
+    else:
+        return '#BEBEBE'
+
 
 def color_disks(c_disk):
     if c_disk < 50:
@@ -92,6 +117,7 @@ def icon(i_cpu):
         return "\uf2c8"
     return "\uf2c7"
 
+
 def color_gpu(c_gpu):
     if c_gpu < 40:
         return "#00FF00"
@@ -104,6 +130,7 @@ def color_gpu(c_gpu):
     if c_gpu < 80:
         return "#ff8000"
     return "#ff0000"
+
 
 print_text = ""
 
@@ -128,11 +155,12 @@ print(
 print(
     print_text +
     'MEM:<span color="{}">{}%</span> '
-    'CPU :<span color="{}">{}%</span> '
+    'CPU:<span color="{}">{}%</span> '
     '{}:<span color="{}">{:>2}ºC</span> '
-    'GPU :{:>2}Mhz '
+    'GPU:{:>2}Mhz '
     '{}:<span color="{}">{:>2}ºC</span> '
+    'VOL:<span color="{}">{}</span> '
     '\uf073 <span color="#BEBEBE">{}</span> '
     '\uf017 <span color="#BEBEBE">{}</span> '
     .format(color_mem(mem), mem, color_uso(cpu_uso), cpu_uso, icon(cpu_temp), color_temp(cpu_temp), cpu_temp,
-            gpu_freq, icon(gpu_temp), color_gpu(gpu_temp), gpu_temp, currentDate, currentTime))
+            gpu_freq, icon(gpu_temp), color_gpu(gpu_temp), gpu_temp, volumen_color(get_master_volume()), get_master_volume(), currentDate, currentTime))
