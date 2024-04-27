@@ -1,1 +1,1 @@
-Barra de estado para el gentor de ventanas i3
+Barra de estado para el gestor de ventanas i3 usando i3block
